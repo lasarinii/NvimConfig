@@ -33,7 +33,7 @@ vim.keymap.set("n", "<leader>Bh", "<cmd>split", {})
 
 -- telescope
 -- find files
-vim.keymap.set("n", "<leader>f", "<cmd>Telescope find_files<cr>", {})
+vim.keymap.set("n", "<C-f>", "<cmd>Telescope find_files<cr>", {})
 -- find git files
 vim.keymap.set("n", "<leader>fg", "<cmd>Telescope git_files<cr>", {})
 -- find buffers
@@ -68,6 +68,8 @@ vim.keymap.set("i", "<C-c>", function () return vim.fn['codeium#Clear']() end, {
 vim.keymap.set("i", "<C-l>", function () return vim.fn['codeium#CycleCompletions'](1) end)
 vim.keymap.set("i", "<C-h>", function () return vim.fn['codeium#CycleCompletions'](-1) end)
 
+-- error toggle
+vim.keymap.set("n", "<C-k>", vim.diagnostic.open_float)
 -- trouble
 vim.keymap.set("n", "<leader>tt", function() require("trouble").toggle() end)
 vim.keymap.set("n", "<leader>tw", function() require("trouble").toggle("workspace_diagnostics") end)

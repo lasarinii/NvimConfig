@@ -175,6 +175,91 @@ local Git = {
     },
 }
 
+local Modes = {
+    init = function (self)
+        self.mode = vim.api.nvim_get_mode().mode
+    end,
+
+    static = {
+        mode_names = {
+            --  n	    Normal
+		    --  no	    Operator-pending
+		    --  nov	    Operator-pending (forced charwise |o_v|)
+		    --  noV	    Operator-pending (forced linewise |o_V|)
+		    --  noCTRL-V Operator-pending (forced blockwise |o_CTRL-V|)
+			-- CTRL-V is one character
+		    --  niI	    Normal using |i_CTRL-O| in |Insert-mode|
+		    --  niR	    Normal using |i_CTRL-O| in |Replace-mode|
+		    --  niV	    Normal using |i_CTRL-O| in |Virtual-Replace-mode|
+		    --  nt	    Normal in |terminal-emulator| (insert goes to terminal mode)
+		    --  ntT	    Normal using |t_CTRL-\_CTRL-O| in |Terminal-mode|
+		    --  v	    Visual by character
+		    --  vs	    Visual by character using |v_CTRL-O| in Select mode
+		    --  V	    Visual by line
+		    --  Vs	    Visual by line using |v_CTRL-O| in Select mode
+		    --  CTRL-V   Visual blockwise
+		    --  CTRL-Vs  Visual blockwise using |v_CTRL-O| in Select mode
+		    --  s	    Select by character
+		    --  S	    Select by line
+		    --  CTRL-S   Select blockwise
+		    --  i	    Insert
+		    --  ic	    Insert mode completion |compl-generic|
+		    --  ix	    Insert mode |i_CTRL-X| completion
+		    --  R	    Replace |R|
+		    --  Rc	    Replace mode completion |compl-generic|
+		    --  Rx	    Replace mode |i_CTRL-X| completion
+		    --  Rv	    Virtual Replace |gR|
+		    --  Rvc	    Virtual Replace mode completion |compl-generic|
+		    --  Rvx	    Virtual Replace mode |i_CTRL-X| completion
+		    --  c	    Command-line editing
+		    --  cv	    Vim Ex mode |gQ|
+		    --  r	    Hit-enter prompt
+		    --  rm	    The -- more -- prompt
+		    --  r?	    A |:confirm| query of some sort
+		    --  !	    Shell or external command is executing
+		    --  t	    Terminal mode: keys go to the job
+            n = "NORMAL",
+            no = "N·OPERATOR",
+            nov = "N·OPERATOR·CHARWISE",
+            noV = "N·OPERATOR·LINEWISE",
+            ["no\22"] = "N·OPERATOR·BLOCKWISE",
+            niI = "N·INSERT",
+            niR = "N·REPLACE",
+            niV = "N·V·REPLACE",
+            nt = "N·TERMINAL",
+            ntT = "N·TERMINAL·T",
+            v = "VISUAL",
+            vs = "V·SELECT",
+            V = "V·LINE",
+            Vs = "V·LINE·SELECT",
+            ["\22"] = "V·BLOCK",
+            ["\22s"] = "V·BLOCK·SELECT",
+            s = "SELECT",
+            S = "SELECT·LINE",
+            ["\19"] = "SELECT·BLOCK",
+            i = "INSERT",
+            ic = "I·COMPL",
+            ix = "I·COMPL·X",
+            R = "REPLACE",
+            Rc = "R·COMPL",
+            Rx = "R·COMPL·X",
+            Rv = "R·V·REPLACE",
+            Rvc = "R·V·REPLACE·COMPL",
+            Rvx = "R·V·REPLACE·COMPL·X",
+            c = "COMMAND",
+            cv = "VIM·EX",
+            r = "HIT-ENTER",
+            rm = "MORE",
+            ["r?"] = "CONFIRM",
+            ["!"] = "SHELL",
+            t = "TERMINAL",
+        }
+    },
+    provider = function (self)
+        return " " .. self.mode_names[self.mode] .. " "
+    end,
+}
+
 return {
     'rebelot/heirline.nvim',
     name = 'heirline',
@@ -182,12 +267,13 @@ return {
     config = function ()
         require('heirline').setup({
             statusline = {
-                FileName,
                 { provider = " "},
+                Modes,
                 FileFlags,
                 { provider = " "},
                 FileType,
                 { provider = "%=" },
+                FileName,
                 { provider = "%=" },
                 Git,
                 Diagnostics,
